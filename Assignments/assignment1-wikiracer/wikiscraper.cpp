@@ -55,6 +55,7 @@ unordered_set<string> findWikiLinks(const string& inp) {
         // Please delete this line when you start working!
         if ((url_start = std::search(url_start, end, delim.begin(), delim.end())) == end) 
             break;
+        url_start += delim.size();
         // END STUDENT CODE HERE
         ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -92,9 +93,9 @@ unordered_set<string> findWikiLinks(const string& inp) {
         }
 
         url_start = url_end;
-
-
     }
+    return ret;
+
 }
 
 

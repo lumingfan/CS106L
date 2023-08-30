@@ -41,9 +41,8 @@ using std::unordered_set;   using std::cin;
 // BEGIN STUDENT CODE HERE
 int numCommonLinks(const unordered_set<string>& curr_set, const unordered_set<string>& target_set) {
     // replace all of these lines!
-    (void) target_set;
-    (void) curr_set;
-    return 0; 
+    auto predicate = [&target_set](const string &str)->bool{return target_set.find(str) != target_set.end();};
+    return count_if(curr_set.begin(), curr_set.end(), predicate);
 }
 // END STUDENT CODE HERE
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,11 +64,7 @@ vector<string> findWikiLadder(const string& start_page, const string& end_page) 
     // BEGIN STUDENT CODE HERE
     auto cmp_fn = [&w, &target_set](const vector<string>& left, const vector<string>& right) {
         // replace all of these lines.
-        (void) w;
-        (void) target_set;
-        (void) left;
-        (void) right;
-        return false; // replace this line! make sure to use numCommonLinks.
+        return numCommonLinks(w.getLinkSet(left.back()), target_set) < numCommonLinks(w.getLinkSet(right.back()), target_set);
     };
     // END STUDENT CODE HERE
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,9 +78,7 @@ vector<string> findWikiLadder(const string& start_page, const string& end_page) 
     // BEGIN STUDENT CODE HERE
     // something like priority_queue<...> queue(...);
     // please delete ALL 4 of these lines! they are here just for the code to compile.
-    std::priority_queue<vector<string>> queue;
-    throw std::invalid_argument("Not implemented yet.\n");
-    return {};
+    std::priority_queue<vector<string>, vector<vector<string>>, decltype(cmp_fn)> queue(cmp_fn);
 
     // END STUDENT CODE HERE
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,6 +109,13 @@ vector<string> findWikiLadder(const string& start_page, const string& end_page) 
                 visited.insert(neighbour);
                 vector<string> new_path = curr_path;
                 new_path.push_back(neighbour);
+                
+                // debug
+                copy(new_path.begin(), new_path.end(), ostream_iterator<string>(cout, " "));
+                cout << endl;
+                //end...
+
+
                 queue.push(new_path);
             }
         }
